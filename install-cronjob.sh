@@ -1,34 +1,35 @@
-#!/bin/sh
+#!/usr/bin/env sh
 ##
 # PHPMYADMIN UPDATE SCRIPT
-# https://github.com/stefansl/pma-updatescript/
+# https://github.com/Dennis14e/pma-updatescript
 ##
+
+SCRIPT_DIR=$(dirname "$0")
 
 # SETTING
 CRONPATH="/etc/cron.daily/pma-update"
 
 # GO
 installcron() {
-    touch $CRONPATH
-    echo "#!/bin/sh" >> $CRONPATH
-    echo "sh $(pwd)/pma-update.sh" >> $CRONPATH
-    echo "Cronjob for phpmyadmin updatescript installed."
-    chmod 755 $CRONPATH
-    break
+    echo > "$CRONPATH"
+    echo "#!/usr/bin/env sh" >> "$CRONPATH"
+    echo "sh \"${SCRIPT_DIR}/pma-update.sh\"" >> "$CRONPATH"
+    chmod 755 "$CRONPATH"
+
+    echo "Cronjob for phpMyAdmin Update-Script installed."
 }
 
-for file in $CRONPATH ]; do
-    if [ -f $file ]; then
-        echo "Cronjob for pma-update already exists. Do you want to renew it? [y|N]"
-        read answer
-        if [ "$answer" = y -o "$answer" = Y ]; then
-            rm $CRONPATH
-            installcron;
-        else
-            echo "Ok, I did nothing!"
-            break
-        fi
+if [ -f "$CRONPATH" ]
+then
+    echo "Cronjob for pma-update already exists. Do you want to renew it? [y|N]"
+    read answer
+    if [ "$answer" = y -o "$answer" = Y ]
+    then
+        rm "$CRONPATH"
     else
-        installcron;
+        echo "Ok, I did nothing!"
+        exit 0
     fi
-done
+fi
+
+installcron
