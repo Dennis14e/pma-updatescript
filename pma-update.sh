@@ -52,7 +52,7 @@ then
     log "Did not find .env settings file."
 fi
 
-source "${SCRIPT_DIR}/.env"
+. "${SCRIPT_DIR}/.env"
 
 
 # Options
@@ -99,6 +99,12 @@ done
 if [ -z "$INSTALL_LOCATION" -o -z "$UPDATE_LOCATION" ]
 then
     log "Please, check your settings. The variables INSTALL_LOCATION, UPDATE_LOCATION are mandatory!"
+    exit 1
+fi
+
+if [ ! -d "$INSTALL_LOCATION" -o ! -d "$UPDATE_LOCATION" ]
+then
+    log "Please, check your settings. The locations INSTALL_LOCATION and/or UPDATE_LOCATION does not exist!"
     exit 1
 fi
 
